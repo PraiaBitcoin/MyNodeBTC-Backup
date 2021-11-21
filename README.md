@@ -32,9 +32,14 @@ Send the /mnt/hdd/mynode/backup/.key.pub for the remote server administrator, so
 
 Set HOST, PORT and REMOTEUSER vars
 
-HOST=someserver.com
+HOST=someserver.com or some.onion address
 PORT=30000
 REMOTEUSER=username
+
+# PROXY
+
+if you want to connect to the remote host thru a proxy or you remote server is a onion address, you can must configure PROXY VAR.
+PROXY=127.0.0.1:9050
 
 
 Have fun!!!

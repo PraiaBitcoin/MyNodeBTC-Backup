@@ -1,7 +1,7 @@
 #! /bin/sh
 
 #set -e
-set -x
+#set -x
 
 CONFIGDIR=/mnt/hdd/mynode/backup
 install -d $CONFIGDIR
@@ -78,12 +78,14 @@ OUT=$DESTINO/diversos-$data.tar
 tar c /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis |
     /usr/bin/gpg --output $OUT.asc $ARGS
 
-#rsync -e "ssh -i /mnt/hdd/mynode/backup/.key -p 35101" $DESTINO/ bbb@casa.ip.inf.br:/BACKUP/ -avzP --fuzzy --delete
-
 if [ -n "$HOST" ]
 then
+   if [ -n "$PROXY" ]
+   then 
+	PROXYCMD=-o\ \"ProxyCommand=nc\ -X\ 5\ -x\ $PROXY\ %h\ %p\"
+   fi
    echo Enviando ao servidor $HOST e apagando origem
-   rsync -e "ssh -i $CONFIGDIR/.key -p $PORT" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER -avzP --fuzzy --remove-source-files
+   rsync -e "ssh $PROXYCMD -i $CONFIGDIR/.key -p $PORT" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER -avzP --fuzzy --remove-source-files
 else
    echo Configure a variável HOST no arquivo $CONFIGDIR/.config
 fi
@@ -92,5 +94,5 @@ if [ -z "$( cat /var/spool/cron/crontabs/root|grep backupmynode )" ]
 then
 	# Se não existir no cron, adiciona para executar aos 15 minutos de cada hora	
    echo Adicionando $0 ao crontab
-   echo "15 * * * * $0 &> /tmp/logbackup" >>  /var/spool/cron/crontabs/root 
+   echo "15 * * * * $0" >>  /var/spool/cron/crontabs/root 
 fi
