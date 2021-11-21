@@ -38,7 +38,7 @@ REMOTEUSER=username
 
 # PROXY
 
-if you want to connect to the remote host thru a proxy or you remote server is a onion address, you can must configure PROXY VAR.
+if you want to connect to the remote host thru a proxy or your remote server is a onion address, you have to configure a PROXY VAR.
 PROXY=127.0.0.1:9050
 
 
