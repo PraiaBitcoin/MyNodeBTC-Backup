@@ -9,7 +9,7 @@ install -d $CONFIGDIR
 
 if [ -f /dev/hwrng ]
 then
-     /gerador aleatorio via hardware disponivel	
+     #gerador aleatorio via hardware disponivel	
   RANDOM=/dev/hwrng
 else
   RANDOM=/dev/random
@@ -51,8 +51,8 @@ fi
 
 if [ ! -f $CONFIGDIR/.key ]
 then
-   # se não existe a chave privada, gea uma nova...
-   #esta chave será usada para autenticação segura ssh
+	   # se não existe a chave privada, gea uma nova...
+	   # esta chave será usada para autenticação segura ssh
    echo Gerando chave ssh
    ssh-keygen -b 4096 -t rsa -f $CONFIGDIR/.key -q -N ""
 fi
