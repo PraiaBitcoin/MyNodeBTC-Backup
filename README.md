@@ -5,9 +5,8 @@ Run script to create config and add it to crontab
 
 After that, configure VARS REMOTEUSER, HOST, PORT, PASSWORD and PUBKEY, as needed
 
-=====================
-PUBLIC KEY ENCRYPTION
-=====================
+# PUBLIC KEY ENCRYPTION
+
 If you own a gpg/pgp key, import your public key on gpg at your node.
 After that edit config file /mnt/hdd/mynode/backup/.config and set 
 PUBKEY=YOURKEYID for example
@@ -19,17 +18,15 @@ If you like, you can create a local private key with GPG to sign that encrypted 
 This is optional. If you generate that gpg key, informe the password for your local private key
 PASSWORD=123456
 
-===================
-PASSWORD ENCRYPTION
-===================
+# PASSWORD ENCRYPTION
+
 If you dont´t have a private gpg key, you can inform a strong PASSWORD to encrypt content.
 Leave it blank so scripts can generate one for you.
 SAVE THAT PASSWORD. Only that PASSWORD can decrypt those content
 
 
-====================
-REMOTE BACKUP SERVER
-====================
+# REMOTE BACKUP SERVER
+
 The script uses rsync over ssh to send files. After send, it removes local files. It creates a local ssh key.
 Send the /mnt/hdd/mynode/backup/.key.pub for the remote server administrator, so ssh can auth with that key.
 
