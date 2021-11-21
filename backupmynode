@@ -78,12 +78,12 @@ OUT=$DESTINO/diversos-$data.tar
 tar c /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis |
     /usr/bin/gpg --output $OUT.asc $ARGS
 
-#rsync -e "ssh -i /mnt/hdd/mynode/backup/.key -p 35101" /mnt/hdd/BACKUP/ bbb@casa.ip.inf.br:/BACKUP/ -avzP --fuzzy --delete
+#rsync -e "ssh -i /mnt/hdd/mynode/backup/.key -p 35101" $DESTINO/ bbb@casa.ip.inf.br:/BACKUP/ -avzP --fuzzy --delete
 
 if [ -n "$HOST" ]
 then
    echo Enviando ao servidor $HOST e apagando origem
-   rsync -e "ssh -i /mnt/hdd/mynode/backup/.key -p $PORT" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER -avzP --fuzzy --remove-source-files
+   rsync -e "ssh -i $CONFIGDIR/.key -p $PORT" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER -avzP --fuzzy --remove-source-files
 else
    echo Configure a variável HOST no arquivo $CONFIGDIR/.config
 fi
