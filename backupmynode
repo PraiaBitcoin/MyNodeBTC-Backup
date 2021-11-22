@@ -6,7 +6,6 @@ set -x
 CONFIGDIR=/mnt/hdd/mynode/backup
 install -d $CONFIGDIR
 
-
 if [ -f /dev/hwrng ]
 then
    #gerador aleatorio via hardware disponivel	
@@ -18,6 +17,11 @@ fi
 if [ -f $CONFIGDIR/.config ]
 then
 . $CONFIGDIR/.config
+fi
+
+if [ -n "$ALT" ]
+then
+  ALT=\-$ALT
 fi
 
 if [ -z "$PORT" ]
@@ -65,7 +69,7 @@ then
    DESTINO=/mnt/hdd/BACKUP
 fi
 
-OUT=$DESTINO/btcpayserver-$data.dat
+OUT=$DESTINO/btcpayserver$ALT-$data.dat
 
 install -d $DESTINO
  
@@ -74,7 +78,7 @@ docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d bt
     /usr/bin/gpg --output $OUT.asc $ARGS
 
 
-OUT=$DESTINO/diversos-$data.tar
+OUT=$DESTINO/diversos$ALT-$data.tar
 
 tar c /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis |
     /usr/bin/gpg --output $OUT.asc $ARGS
@@ -88,7 +92,7 @@ then
    fi
    echo Enviando ao servidor $HOST
     #envia ao servidor, com ou sem proxy
-   rsync -e "ssh $PROXYCMD -i $CONFIGDIR/.key -p $PORT -o ConnectTimeout=30" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER -avzP --fuzzy --inplace --remove-source-files
+   rsync -e "ssh $PROXYCMD -i $CONFIGDIR/.key -p $PORT -o ConnectTimeout=30" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER$ALT -avzP --fuzzy --inplace --remove-source-files
 else
    echo Configure a variávelvel HOST no arquivo $CONFIGDIR/.config
 fi
