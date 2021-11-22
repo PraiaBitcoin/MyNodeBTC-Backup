@@ -1,4 +1,4 @@
-# BTCPayServer-Backup
+# MyNodeBTC-Backup
 Script to run a backup on BTC Pay Server running on MyNodeBTC
 
 Run script to create config and add it to crontab
@@ -20,7 +20,7 @@ PASSWORD=123456
 
 # PASSWORD ENCRYPTION
 
-If you dont´t have a private gpg key, you can inform a strong PASSWORD to encrypt content.
+If you dontÂ´t have a private gpg key, you can inform a strong PASSWORD to encrypt content.
 Leave it blank so scripts can generate one for you.
 SAVE THAT PASSWORD. Only that PASSWORD can decrypt those content
 
