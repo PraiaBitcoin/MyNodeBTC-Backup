@@ -3,6 +3,11 @@
 #set -e
 set -x
 
+if [ ! -f /usr/bin/xxd ]
+then
+   apt-get install xxd
+fi
+
 CONFIGDIR=/mnt/hdd/mynode/backup
 install -d $CONFIGDIR
 
@@ -62,7 +67,11 @@ then
 fi
 
 ARGS=$ARGS\ --quiet\ --no-tty\ --yes\ -z\ 9\ -a 
-data=$( date "+%Y%m%d-%H%M" )
+#data=$( date "+%Y%m%d-%H%M" )\-$(dd if=/dev/hwrng count=16 bs=1|xxd -p -c 80)
+data=$( date "+%Y%m%d-%H%M" )\-$(cat /proc/cpuinfo|grep Serial|sha256sum|xxd -p -c 80)
+
+
+cat /proc/cpuinfo |grep Serial|base64
 
 if [ -z "$DESTINO" ]
 then
@@ -73,15 +82,17 @@ OUT=$DESTINO/btcpayserver$ALT-$data.dat
 
 install -d $DESTINO
  
- #Backup do btcpayserver criptografado ocm a senha ou destinatario informado em PUBKEY, e assinado caso seja fornecida a senha gpg de assinatura 
+ #Backup do btcpayserver criptografado com a senha ou destinatario informado em PUBKEY, e assinado caso seja fornecida a senha gpg de assinatura 
 docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d btcpayservermainnet --create | 
     /usr/bin/gpg --output $OUT.asc $ARGS
 
 
 OUT=$DESTINO/diversos$ALT-$data.tar
 
-tar c /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis |
+tar c /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* |
     /usr/bin/gpg --output $OUT.asc $ARGS
+
+echo $data > $DESTINO/LAST$ALT
 
 if [ -n "$HOST" ]
 then
