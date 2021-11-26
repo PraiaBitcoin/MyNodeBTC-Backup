@@ -1,7 +1,7 @@
 #! /bin/sh
 
 #set -e
-set -x
+#set -x
 
 if [ ! -f /usr/bin/xxd ]
 then
@@ -89,7 +89,7 @@ docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d bt
 
 OUT=$DESTINO/diversos$ALT-$data.tar
 
-tar c /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* |
+tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx |
     /usr/bin/gpg --output $OUT.asc $ARGS
 
 echo $data > $DESTINO/LAST$ALT
