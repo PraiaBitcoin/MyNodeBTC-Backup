@@ -90,9 +90,11 @@ docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d bt
 
 OUT=$DESTINO/control$ALT-$data.dat
 
-docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d control --create > $OUT
+docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d control --create > "$OUT"
 
+OUT=$DESTINO/alldb$ALT-$data.dat
 
+docker exec $(docker ps -a -q -f "name=postgres_1") pg_dumpall -c -U postgres > "$OUT"
 
 OUT=$DESTINO/diversos$ALT-$data.tar
 
