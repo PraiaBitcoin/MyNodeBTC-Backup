@@ -41,17 +41,22 @@ fi
 
 if [ -z "$PUBKEY" ]
 then
-    #Se não houver chave especificada
+    #Se não houver senha especificada
    if [ -z "$PASSWORD" ]
    then
-       #Se nÃ£o houver senha, gera senha aleatoriamente
+       #Se nã houver senha, gera senha aleatoriamente
       echo Gerando senha aleatória
       PASSWORD=$( dd if=$RANDOM bs=64 count=1|base64 -w256 )
       echo PASSWORD=$PASSWORD >> $CONFIGDIR/.config 
    fi
-  ARGS=--pinentry-mode\ loopback\ --passphrase\ $PASSWORD\ -c
+  ARGS=\-\-pinentry-mode\ loopback\ --passphrase\ $PASSWORD\ -c
 else
-  ARGS=--pinentry-mode\ loopback\ --passphrase\ $PASSWORD\ --recipient\ $PUBKEY\ -e   
+  ARGS=\-\-pinentry-mode\ loopback\ --passphrase\ $PASSWORD
+  for c in $PUBKEY
+  do
+    ARGS=$ARGS\ --recipient\ $c 
+  done
+  ARGS=$ARGS\ -e   
   if [ -n "$PASSWORD" ]
   then 	
     ARGS=$ARGS\ -s
@@ -60,8 +65,8 @@ fi
 
 if [ ! -f $CONFIGDIR/.key ]
 then
-    # se nÃ£o existe a chave privada, gea uma nova...
-    # esta chave serÃ¡ usada para autenticaÃ§Ã£o segura ssh
+    # se não existe a chave privada, gera uma nova...
+    # esta chave será usada para autenticação segura ssh
    echo Gerando chave ssh
    ssh-keygen -b 4096 -t rsa -f $CONFIGDIR/.key -q -N ""
 fi
@@ -83,26 +88,26 @@ OUT=$DESTINO/btcpayserver$ALT-$data.dat
 install -d $DESTINO
  
  #Backup do btcpayserver criptografado com a senha ou destinatario informado em PUBKEY, e assinado caso seja fornecida a senha gpg de assinatura 
-docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d btcpayservermainnet --create > $OUT
-
-#| 
-#    /usr/bin/gpg --output $OUT.asc $ARGS
+docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d btcpayservermainnet --create | 
+    /usr/bin/gpg --output $OUT.asc $ARGS
 
 OUT=$DESTINO/control$ALT-$data.dat
 
-docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d control --create > "$OUT"
+docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d control --create |
+    /usr/bin/gpg --output $OUT.asc $ARGS
 
 OUT=$DESTINO/alldb$ALT-$data.dat
 
-docker exec $(docker ps -a -q -f "name=postgres_1") pg_dumpall -c -U postgres > "$OUT"
+docker exec $(docker ps -a -q -f "name=postgres_1") pg_dumpall -c -U postgres |
+    /usr/bin/gpg --output $OUT.asc $ARGS
+
 
 OUT=$DESTINO/diversos$ALT-$data.tar
 
-tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf > $OUT
-#|
-#    /usr/bin/gpg --output $OUT.asc $ARGS
+tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf |
+    /usr/bin/gpg --output $OUT.asc $ARGS
 
-echo $data > $DESTINO/LAST$ALT
+echo "SOURCE=$data" > $DESTINO/LAST$ALT
 
 if [ -n "$HOST" ]
 then
