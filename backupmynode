@@ -72,7 +72,7 @@ then
 fi
 
 ARGS=$ARGS\ --quiet\ --no-tty\ --yes\ -z\ 9\ -a 
-data=$( date "+%Y%m%d-%H%M" )\-$(dd if=/dev/hwrng count=16 bs=1|xxd -p -c 80)
+data=$( date "+%Y%m%d-%H%M" )\-$(dd if=$RANDOM count=16 bs=1|xxd -p -c 80)
 #data=$( date "+%Y%m%d-%H%M" )\-$(cat /proc/cpuinfo|grep Serial|sha256sum|xxd -p -c 80)
 
 
