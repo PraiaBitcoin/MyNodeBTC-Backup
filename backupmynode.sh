@@ -41,11 +41,11 @@ fi
 
 if [ -z "$PUBKEY" ]
 then
-    #Se não houver senha especificada
+    #Se nÃ£o houver senha especificada
    if [ -z "$PASSWORD" ]
    then
-       #Se nã houver senha, gera senha aleatoriamente
-      echo Gerando senha aleatória
+       #Se nÃ£ houver senha, gera senha aleatoriamente
+      echo Gerando senha aleatÃ³ria
       PASSWORD=$( dd if=$RANDOM bs=64 count=1|base64 -w256 )
       echo PASSWORD=$PASSWORD >> $CONFIGDIR/.config 
    fi
@@ -65,8 +65,8 @@ fi
 
 if [ ! -f $CONFIGDIR/.key ]
 then
-    # se não existe a chave privada, gera uma nova...
-    # esta chave será usada para autenticação segura ssh
+    # se nÃ£o existe a chave privada, gera uma nova...
+    # esta chave serÃ¡ usada para autenticaÃ§Ã£o segura ssh
    echo Gerando chave ssh
    ssh-keygen -b 4096 -t rsa -f $CONFIGDIR/.key -q -N ""
 fi
@@ -130,12 +130,12 @@ then
     #envia ao servidor, com ou sem proxy
    rsync -e "ssh $PROXYCMD -i $CONFIGDIR/.key -p $PORT -o ConnectTimeout=30" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER$ALT -avzP --fuzzy --inplace --remove-source-files
 else
-   echo Configure a variÃ¡velvel HOST no arquivo $CONFIGDIR/.config
+   echo Configure a variÃƒÂ¡velvel HOST no arquivo $CONFIGDIR/.config
 fi
 
 if [ -z "$( cat /var/spool/cron/crontabs/root|grep backupmynode )" ]
 then
-    # Se nÃ£o existir no cron, adiciona para executar aos 15 minutos de cada hora	
+    # Se nÃƒÂ£o existir no cron, adiciona para executar aos 15 minutos de cada hora	
    echo Adicionando $0 ao crontab
    echo "15 * * * * $0" >>  /var/spool/cron/crontabs/root 
 fi
