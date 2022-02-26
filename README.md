@@ -1,7 +1,10 @@
 # MyNodeBTC-Backup
-Script to run a backup on BTC Pay Server running on MyNodeBTC
+Script to run a backup on MyNodeBTC
 
 Run script to create config and add it to crontab
+
+
+# INSTALLATION 
 
 After that, configure VARS REMOTEUSER, HOST, PORT, PASSWORD and PUBKEY, as needed
 
