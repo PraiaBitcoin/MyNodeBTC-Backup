@@ -3,5 +3,5 @@ Description=Backup MyNodeBtc and Apps
 [Service]
 User=root
 Group=root
-ExecStart=/usr/bin/bash /home/admin/backupmynode/backupmynode.sh
+ExecStart=/usr/bin/bash /home/admin/MyNodeBTC-Backup/backupmynode.sh
 StandardError=append:/var/log/backupmynode_error.log
