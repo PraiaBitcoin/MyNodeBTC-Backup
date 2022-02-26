@@ -1,0 +1,8 @@
+[Unit]
+Description=Run BackupMynode Every 15 minutes
+[Timer]
+OnBootSec=300
+OnUnitActiveSec=900
+AccuracySec=1
+[Install]
+WantedBy=timers.target
