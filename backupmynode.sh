@@ -88,34 +88,30 @@ OUT=$DESTINO/btcpayserver$ALT-$data.dat
 install -d $DESTINO
  
  #Backup do btcpayserver criptografado com a senha ou destinatario informado em PUBKEY, e assinado caso seja fornecida a senha gpg de assinatura 
-docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d btcpayservermainnet --create > $OUT
-#| 
-#    /usr/bin/gpg --output $OUT.asc $ARGS
+docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d btcpayservermainnet --create | 
+    /usr/bin/gpg --output $OUT.asc $ARGS
 
 OUT=$DESTINO/control$ALT-$data.dat
 
-docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d control --create > $OUT
-#|
-#    /usr/bin/gpg --output $OUT.asc $ARGS
+docker exec -i $(docker ps -a -q -f "name=postgres_1") pg_dump -U postgres -d control --create |
+    /usr/bin/gpg --output $OUT.asc $ARGS
 
 OUT=$DESTINO/alldb$ALT-$data.dat
 
-docker exec $(docker ps -a -q -f "name=postgres_1") pg_dumpall -c -U postgres > $OUT
-#|
-#    /usr/bin/gpg --output $OUT.asc $ARGS
+docker exec $(docker ps -a -q -f "name=postgres_1") pg_dumpall -c -U postgres |
+    /usr/bin/gpg --output $OUT.asc $ARGS
 
 
 OUT=$DESTINO/diversos$ALT-$data.tar
 
-tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf > $OUT
-#|
-#    /usr/bin/gpg --output $OUT.asc $ARGS
+tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf |
+    /usr/bin/gpg --output $OUT.asc $ARGS
     
     
 
 echo "SOURCE=$data" > $DESTINO/LAST$ALT
 
-exit 0
+#exit 0
 
 
 
@@ -133,9 +129,9 @@ else
    echo Configure a variÃ¡velvel HOST no arquivo $CONFIGDIR/.config
 fi
 
-if [ -z "$( cat /var/spool/cron/crontabs/root|grep backupmynode )" ]
-then
-    # Se nÃ£o existir no cron, adiciona para executar aos 15 minutos de cada hora	
-   echo Adicionando $0 ao crontab
-   echo "15 * * * * $0" >>  /var/spool/cron/crontabs/root 
-fi
+#if [ -z "$( cat /var/spool/cron/crontabs/root|grep backupmynode )" ]
+#then
+#    # Se nÃ£o existir no cron, adiciona para executar aos 15 minutos de cada hora	
+#   echo Adicionando $0 ao crontab
+#   echo "15 * * * * $0" >>  /var/spool/cron/crontabs/root 
+#fi
