@@ -8,6 +8,7 @@ Saves Lnd, BtcPayServer, LnBits, LnHub, Electrum,
 Run the command to configure the service and timer 
 ```
 $ cd /home/admin/
+$nano .config 
 $ git clone https://github.com/PraiaBitcoin/MyNodeBTC-Backup
 $ cd MyNodeBTC-Backup
 $ chmod 755 install.sh
