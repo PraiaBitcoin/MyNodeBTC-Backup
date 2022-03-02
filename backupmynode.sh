@@ -1,7 +1,7 @@
 #! /bin/sh
 
 #set -e
-#set -x
+set -x
 
 if [ ! -f /usr/bin/xxd ]
 then
