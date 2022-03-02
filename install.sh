@@ -1,6 +1,10 @@
 #!/bin/bash
 chmod 755 backupmynode.sh
-mv .config /mnt/hdd/BACKUP/.config
+if [ ! -f /mnt/hdd/mynode/backup/.config ]
+then
+    echo copiando Config
+    mv .config /mnt/hdd/mynode/backup/.config
+fi
 cp config/backupmynode.service /etc/systemd/system/backupmynode.service
 cp config/backupmynode.timer /etc/systemd/system/backupmynode.timer
 systemctl enable backupmynode.timer
