@@ -1,5 +1,5 @@
 #!/bin/bash
-chmod 755 backupmynode.sh
+chmod 755 /home/admin/MyNodeBTC-Backup/backupmynode.sh
 if [ ! -f /mnt/hdd/mynode/backup/.config ]
 then
     echo copiando Config
