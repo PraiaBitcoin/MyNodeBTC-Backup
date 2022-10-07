@@ -101,9 +101,14 @@ OUT=$DESTINO/alldb$ALT-$data.dat
 docker exec $(docker ps -a -q -f "name=postgres_1") pg_dumpall -c -U postgres |
     /usr/bin/gpg --output $OUT.asc $ARGS
 
-OUT=$DESTINO/lnbits$ALT-$data.dat
+OUT=$DESTINO/postgres$ALT-$data.dat
 
 sudo -u postgres pg_dumpall -c -U postgres |
+    /usr/bin/gpg --output $OUT.asc $ARGS
+
+OUT=$DESTINO/lnbits$ALT-$data.dat
+
+sudo -u postgres pg_dump -U postgres -d lnbits --create |
     /usr/bin/gpg --output $OUT.asc $ARGS
 
 OUT=$DESTINO/diversos$ALT-$data.tar
