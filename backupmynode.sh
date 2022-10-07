@@ -52,6 +52,10 @@ then
   ARGS=\-\-pinentry-mode\ loopback\ --passphrase\ $PASSWORD\ -c
 else
   ARGS=\-\-pinentry-mode\ loopback\ --passphrase\ $PASSWORD
+  if [ -n "$SIGNKEY" ]
+  then
+    ARGS=$ARGS\ --default-key\ $SIGNKEY
+  fi
   for c in $PUBKEY
   do
     ARGS=$ARGS\ --recipient\ $c 
