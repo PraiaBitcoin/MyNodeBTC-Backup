@@ -117,7 +117,7 @@ sudo -u postgres pg_dump -U postgres -d lnbits --create |
 
 OUT=$DESTINO/diversos$ALT-$data.tar
 
-tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf |
+tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf /mnt/hdd/mynode/MISC |
     /usr/bin/gpg --output $OUT.asc $ARGS
     
     
