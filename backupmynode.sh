@@ -126,6 +126,49 @@ echo "SOURCE=$data" > $DESTINO/LAST$ALT
 
 #exit 0
 
+SENT=$DESTINO/SENT
+  
+if [ -x /usr/bin/gdrive ] 
+then
+
+  install -d $SENT
+  if [ ! -f $HOME/.gdrive/token_v2.json ]
+  then
+     echo GDRIVE not authorized... Authorize it first
+  else 
+     if [ -z "$GDRIVEUID" ]
+     then
+       GDRIVEUID=$(gdrive list|grep BACKUP-MYNODE|cut -d' ' -f1)
+       if [ -z "$GDRIVEUID" ] 
+       then
+          gdrive mkdir BACKUP-MYNODE
+	  GDRIVEUID=$(gdrive list|grep BACKUP-MYNODE|cut -d' ' -f1)
+       fi
+       #echo "GDRIVEUID=$GDRIVEUID" >> $CONFIGDIR/.config       
+     fi
+     
+     
+     if [ -n "$GDRIVEUID" ]
+     then
+       PARENT=--parent\ "$GDRIVEUID"
+
+     fi
+  
+     echo Backing up files to gdrive ID $GDRIVEUID
+     
+     for i in $DESTINO/*
+     do 
+       if [ -f "$i" ]
+       then 
+         /usr/bin/gdrive upload $PARENT "$i"
+	 mv "$i" "$SENT"
+       fi
+     done  
+  fi  
+
+fi
+
+#exit 0
 
 
 if [ -n "$HOST" ]
@@ -148,3 +191,6 @@ fi
 #   echo Adicionando $0 ao crontab
 #   echo "15 * * * * $0" >>  /var/spool/cron/crontabs/root 
 #fi
+
+#find $DESTINO -type f -mtime +30 -delete   
+
