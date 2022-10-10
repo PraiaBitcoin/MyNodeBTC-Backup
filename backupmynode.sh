@@ -118,9 +118,16 @@ sudo -u postgres pg_dump -U postgres -d lnbits --create |
 OUT=$DESTINO/diversos$ALT-$data.tar
 
 tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf /mnt/hdd/mynode/MISC |
-    /usr/bin/gpg --output $OUT.asc $ARGS
-    
-    
+    /usr/bin/gpg --output $OUT.asc $ARGS 
+	
+if [ -f /mnt/hdd/mynode/btcpayserver/btcpayserver-docker/btcpay-backup.sh ]
+then
+  OUT=$DESTINO/btcpayserver-completo$ALT-$data.tar.gz
+  bash /mnt/hdd/mynode/btcpayserver/btcpayserver-docker/btcpay-backup.sh
+  cat /mnt/hdd/mynode/docker/volumes/backup_datadir/_data/backup.tar.gz |
+      /usr/bin/gpg --output $OUT.asc $ARGS
+fi
+  
 
 echo "SOURCE=$data" > $DESTINO/LAST$ALT
 
