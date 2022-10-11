@@ -1,9 +1,11 @@
-#! /bin/sh
+#! /bin/bash
 
 #set -e
 set -x
+XXD=/usr/bin/xxd
+DD=/usr/bin/dd
 
-if [ ! -f /usr/bin/xxd ]
+if [ ! -f "$XXD" ]
 then
    apt-get install xxd
 fi
@@ -13,10 +15,10 @@ install -d $CONFIGDIR
 
 if [ -f /dev/hwrng ]
 then
-   #gerador aleatorio via hardware disponivel	
-  RANDOM=/dev/hwrng
+  #gerador aleatorio via hardware disponivel	
+  RAND=/dev/hwrng
 else
-  RANDOM=/dev/random
+  RAND=/dev/random
 fi
 
 if [ -f $CONFIGDIR/.config ]
@@ -41,12 +43,12 @@ fi
 
 if [ -z "$PUBKEY" ]
 then
-    #Se não houver senha especificada
+    #Se nÃ£o houver senha especificada
    if [ -z "$PASSWORD" ]
    then
-       #Se nã houver senha, gera senha aleatoriamente
-      echo Gerando senha aleatória
-      PASSWORD=$( dd if=$RANDOM bs=64 count=1|base64 -w256 )
+       #Se nÃ£ houver senha, gera senha aleatoriamente
+      echo Gerando senha aleatÃ³ria
+      PASSWORD=$( $DD if=$RAND bs=64 count=1|base64 -w256 )
       echo PASSWORD=$PASSWORD >> $CONFIGDIR/.config 
    fi
   ARGS=\-\-pinentry-mode\ loopback\ --passphrase\ $PASSWORD\ -c
@@ -69,14 +71,15 @@ fi
 
 if [ ! -f $CONFIGDIR/.key ]
 then
-    # se não existe a chave privada, gera uma nova...
-    # esta chave será usada para autenticação segura ssh
+    # se nÃ£o existe a chave privada, gera uma nova...
+    # esta chave serÃ¡ usada para autenticaÃ§Ã£o segura ssh
    echo Gerando chave ssh
    ssh-keygen -b 4096 -t rsa -f $CONFIGDIR/.key -q -N ""
 fi
 
 ARGS=$ARGS\ --quiet\ --no-tty\ --yes\ -z\ 9\ -a 
-data=$( date "+%Y%m%d-%H%M" )\-$(dd if=$RANDOM count=16 bs=1|xxd -p -c 80)
+R=$( $DD if=$RAND count=16 bs=1  |$XXD -p -c 80 )
+data=$( date "+%Y%m%d-%H%M" )-$R
 #data=$( date "+%Y%m%d-%H%M" )\-$(cat /proc/cpuinfo|grep Serial|sha256sum|xxd -p -c 80)
 
 
@@ -118,16 +121,18 @@ sudo -u postgres pg_dump -U postgres -d lnbits --create |
 OUT=$DESTINO/diversos$ALT-$data.tar
 
 tar cv /mnt/hdd/mynode/bitcoin/*.dat $CONFIGDIR /home/bitcoin/lnd_backup/ /mnt/hdd/mynode/redis /mnt/hdd/mynode/ln* /etc/lets* /etc/nginx /mnt/hdd/BTCPAYSERVER/conf /mnt/hdd/mynode/MISC |
-    /usr/bin/gpg --output $OUT.asc $ARGS 
-	
+    /usr/bin/gpg --output $OUT.asc $ARGS
+
 if [ -f /mnt/hdd/mynode/btcpayserver/btcpayserver-docker/btcpay-backup.sh ]
 then
   OUT=$DESTINO/btcpayserver-completo$ALT-$data.tar.gz
   bash /mnt/hdd/mynode/btcpayserver/btcpayserver-docker/btcpay-backup.sh
   cat /mnt/hdd/mynode/docker/volumes/backup_datadir/_data/backup.tar.gz |
-      /usr/bin/gpg --output $OUT.asc $ARGS
-fi
+      /usr/bin/gpg --output $OUT.asc $ARGS       
+fi  
   
+
+    
 
 echo "SOURCE=$data" > $DESTINO/LAST$ALT
 
@@ -189,12 +194,12 @@ then
     #envia ao servidor, com ou sem proxy
    rsync -e "ssh $PROXYCMD -i $CONFIGDIR/.key -p $PORT -o ConnectTimeout=30" $DESTINO $REMOTEUSER@$HOST:/BACKUP/$REMOTEUSER$ALT -avzP --fuzzy --inplace --remove-source-files
 else
-   echo Configure a variÃ¡velvel HOST no arquivo $CONFIGDIR/.config
+   echo Configure a variÃƒÂ¡velvel HOST no arquivo $CONFIGDIR/.config
 fi
 
 #if [ -z "$( cat /var/spool/cron/crontabs/root|grep backupmynode )" ]
 #then
-#    # Se nÃ£o existir no cron, adiciona para executar aos 15 minutos de cada hora	
+#    # Se nÃƒÂ£o existir no cron, adiciona para executar aos 15 minutos de cada hora	
 #   echo Adicionando $0 ao crontab
 #   echo "15 * * * * $0" >>  /var/spool/cron/crontabs/root 
 #fi
