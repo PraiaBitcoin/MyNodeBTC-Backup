@@ -176,8 +176,7 @@ then
      do 
        if [ -f "$i" ]
        then 
-         /usr/bin/gdrive upload $PARENT "$i"
-	 mv "$i" "$SENT"
+         /usr/bin/gdrive upload $PARENT "$i" && mv "$i" "$SENT"
        fi
      done  
   fi  
